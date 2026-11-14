@@ -1,0 +1,61 @@
+// ============================================================================
+//  OLA RIDE INSIGHTS - DAX measures
+//  Create a blank table called "_Measures" (Enter Data) and add these one by one.
+//  Model: fact_rides (ola_rides_clean.csv) with dim_vehicle and dim_date
+// ============================================================================
+
+// ---------- Volume ----------------------------------------------------------
+Total Bookings        = COUNTROWS ( fact_rides )
+Successful Rides      = CALCULATE ( [Total Bookings], fact_rides[Booking_Status] = "Success" )
+Completed Rides       = CALCULATE ( [Total Bookings], fact_rides[Is_Completed] = 1 )
+Cancelled by Customer = CALCULATE ( [Total Bookings], fact_rides[Booking_Status] = "Canceled by Customer" )
+Cancelled by Driver   = CALCULATE ( [Total Bookings], fact_rides[Booking_Status] = "Canceled by Driver" )
+Driver Not Found      = CALCULATE ( [Total Bookings], fact_rides[Booking_Status] = "Driver Not Found" )
+
+// ---------- Rates -----------------------------------------------------------
+Success Rate %      = DIVIDE ( [Successful Rides], [Total Bookings] )
+Cancellation Rate % = DIVIDE ( [Cancelled by Customer] + [Cancelled by Driver], [Total Bookings] )
+Incomplete Rate %   = DIVIDE ( CALCULATE ( [Total Bookings], fact_rides[Incomplete_Rides] = "Yes" ), [Successful Rides] )
+
+// ---------- Money (slide 2 columns) -----------------------------------------
+Total Booking Value   = SUM ( fact_rides[Booking_Value] )
+Success Booking Value = CALCULATE ( [Total Booking Value], fact_rides[Booking_Status] = "Success" )
+Leaked Value          = [Total Booking Value] - [Success Booking Value]
+Leakage %             = DIVIDE ( [Leaked Value], [Total Booking Value] )
+Avg Fare              = DIVIDE ( [Success Booking Value], [Successful Rides] )
+Revenue per Km        = DIVIDE ( [Success Booking Value], [Total Distance Travelled] )
+
+// ---------- Distance (slide 2 columns) --------------------------------------
+Total Distance Travelled = SUM ( fact_rides[Ride_Distance] )
+Avg Distance Travelled   = DIVIDE ( [Total Distance Travelled], [Successful Rides] )
+
+// ---------- Ratings (slide 5) -----------------------------------------------
+Avg Driver Rating   = AVERAGE ( fact_rides[Driver_Ratings] )
+Avg Customer Rating = AVERAGE ( fact_rides[Customer_Rating] )
+Low Rating Share %  =
+    DIVIDE (
+        CALCULATE ( [Successful Rides], fact_rides[Driver_Ratings] < 3.5 ),
+        [Successful Rides]
+    )
+
+// ---------- Time intelligence / trend ---------------------------------------
+Bookings 7D Avg =
+    AVERAGEX (
+        DATESINPERIOD ( dim_date[Date], MAX ( dim_date[Date] ), -7, DAY ),
+        [Total Bookings]
+    )
+Cumulative Revenue =
+    CALCULATE (
+        [Success Booking Value],
+        FILTER ( ALL ( dim_date[Date] ), dim_date[Date] <= MAX ( dim_date[Date] ) )
+    )
+
+// ---------- Ranking (Top 5 visuals) -----------------------------------------
+Customer Value Rank =
+    RANKX ( ALL ( fact_rides[Customer_ID] ), [Total Booking Value], , DESC, DENSE )
+
+// ---------- Dynamic title ---------------------------------------------------
+Page Subtitle =
+    "Success rate " & FORMAT ( [Success Rate %], "0.0%" ) &
+    " | Revenue " & FORMAT ( [Success Booking Value] / 10000000, "0.00" ) & " Cr" &
+    " | " & FORMAT ( [Total Bookings], "#,0" ) & " bookings"

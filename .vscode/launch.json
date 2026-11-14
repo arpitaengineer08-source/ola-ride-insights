@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Streamlit: run dashboard",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "streamlit",
+      "args": ["run", "app/streamlit_app.py"],
+      "cwd": "${workspaceFolder}",
+      "justMyCode": true
+    },
+    {
+      "name": "ETL: rebuild data + DB",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "src.etl",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

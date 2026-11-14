@@ -1,0 +1,25 @@
+{
+  "name": "Ola Dark Lime",
+  "dataColors": ["#D4E600", "#58A6FF", "#BC8CFF", "#2EA043", "#F0883E", "#39D0D8", "#FF7B72", "#8B949E"],
+  "background": "#0E1117",
+  "foreground": "#E6EDF3",
+  "tableAccent": "#D4E600",
+  "good": "#2EA043",
+  "neutral": "#D29922",
+  "bad": "#F85149",
+  "maximum": "#D4E600",
+  "center": "#58A6FF",
+  "minimum": "#161B22",
+  "textClasses": {
+    "title":  { "fontFace": "Segoe UI Semibold", "fontSize": 14, "color": "#E6EDF3" },
+    "label":  { "fontFace": "Segoe UI", "fontSize": 10, "color": "#8B949E" },
+    "callout": { "fontFace": "Segoe UI Semibold", "fontSize": 28, "color": "#D4E600" }
+  },
+  "visualStyles": {
+    "*": { "*": {
+      "background": [{ "color": { "solid": { "color": "#161B22" } }, "transparency": 0 }],
+      "border": [{ "color": { "solid": { "color": "#262C36" } }, "radius": 8 }]
+    } },
+    "page": { "*": { "background": [{ "color": { "solid": { "color": "#0E1117" } }, "transparency": 0 }] } }
+  }
+}

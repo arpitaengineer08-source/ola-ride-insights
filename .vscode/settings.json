@@ -1,0 +1,8 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": ["tests"],
+  "python.analysis.extraPaths": ["${workspaceFolder}", "${workspaceFolder}/app"],
+  "files.exclude": { "**/__pycache__": true, "**/.pytest_cache": true },
+  "[sql]": { "editor.tabSize": 4 }
+}
